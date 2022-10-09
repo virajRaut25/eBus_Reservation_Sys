@@ -1,10 +1,11 @@
 import React from "react";
 import { useContext, useState } from "react";
 import searchContext from "../context/search/searchContext";
+import BusItems from "./BusItems";
 
 export default function SearchBus() {
   const context = useContext(searchContext);
-  const { searchBus } = context;
+  const { searchBus, searchRes } = context;
   const [search, setSearch] = useState({
     source: "",
     destination: "",
@@ -16,6 +17,7 @@ export default function SearchBus() {
   const handleClick = () => {
     console.log(search.source, search.destination, search.trip_date);
     searchBus(search.source, search.destination, search.trip_date);
+    console.log(searchRes)
   };
   return (
     <>
@@ -165,6 +167,15 @@ export default function SearchBus() {
             </form>
           </div>
         </div>
+      </div>
+      <div className="my-3">
+        <h2>Available Buses</h2>
+        <div className="container">
+          {searchRes.length === 0 && "Not Available"}
+        </div>
+        {searchRes.map((sbus, index) => {
+          return <BusItems key={index} bus={sbus} search={search}/>;
+        })}
       </div>
     </>
   );

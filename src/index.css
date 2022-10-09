@@ -30,8 +30,14 @@
   top: 59px;
 }
 
-.row-two{
-  margin-left: 2rem;
+.row-one, .row-two{
+  margin: 0 auto;
+}
+.row-three, .row-four, .row-five, .row-six{
+  margin: 2rem auto;
 }
 
+.service-type{
+  font-size: 2rem;
+}
 

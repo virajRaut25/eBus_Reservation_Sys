@@ -29,24 +29,6 @@ router.post(
         },
         { _id: 1 }
       );
-      const busRoute = await BusRoute.findById(routeId);
-      let alighting_points = busRoute.alighting_points;
-      let boarding_points = busRoute.boarding_points;
-      let bKm, aKm;
-      boarding_points.forEach((ele) => {
-        if (ele.name === source) {
-          bKm = ele.bKm;
-        }
-      });
-      alighting_points.forEach((ele) => {
-        if (ele.name === destination) {
-          aKm = ele.aKm;
-        }
-      });
-      let fare = 0;
-      let tKm = aKm - bKm;
-      fare = fareCal(tKm);
-      console.log(fare);
       let tripId = await Trip.find(
         {
           trip_date,
@@ -59,7 +41,7 @@ router.post(
       })
         .populate(["route_id", "bus_id"])
         .then(function (dbTour) {
-          res.json({ dbTour, fare });
+          res.json(dbTour);
         })
         .catch(function (err) {
           res.json(err);
