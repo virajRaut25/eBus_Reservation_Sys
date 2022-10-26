@@ -1,5 +1,9 @@
 import React from "react";
 import fareCal from "../fareCal";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import reservationContext from "../context/reservation/reservationContext";
+
 
 export default function BusItems(props) {
   const { bus, search } = props;
@@ -57,6 +61,29 @@ export default function BusItems(props) {
   let fare = 0;
   fare = fareCal(tKm);
 
+  const context = useContext(reservationContext);
+  const { setRev, searchTrip } = context;
+
+  const handleRev = ()=>{
+    searchTrip(bus._id);
+    setRev({
+      trip_id: bus._id,
+      book_seats_no: bus.book_seats_no,
+      service_type: bus.bus_id.service_type,
+      source: bus.route_id.source,
+      sd_time: bus.sd_time,
+      destination: bus.route_id.destination,
+      destTime,
+      boarding_point: search.source,
+      bTime,
+      alighting_point: search.destination,
+      aTime,
+      journeyDur,
+      fare,
+      availability:bus.availability,
+     })
+  }
+  
   return (
     <div className="card w-90" style={{ margin: "4px auto" }}>
       <div className="card-body">
@@ -87,7 +114,7 @@ export default function BusItems(props) {
             <div className="f-12 mt-1 text-secondary">{bus.availability}</div>
           </div>
           <div className="p-1 w-10 row-six">
-            <button className="btn btn-primary">Book Ticket</button>
+            <Link className="btn btn-primary" to='/reservationForm' onClick={()=>{handleRev()}}>Book Ticket</Link>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ const BusRoute = require("../models/BusRoute");
 
 const router = express.Router();
 
-// Route 1: Get user search result using: Get "/api/search". With or Without Sign-in
+// Route 1: Get user search result using: Post "/api/search". With or Without Sign-in
 router.post(
   "/",
   [

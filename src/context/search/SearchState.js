@@ -3,6 +3,11 @@ import SearchContext from "./searchContext";
 
 const SearchState = (props) => {
   const host = "http://localhost:5000";
+  const [search, setSearch] = useState({
+    source: "",
+    destination: "",
+    trip_date: "",
+  });
   const [searchRes, setSearchRes] = useState([]);
   // Search Bus
   const searchBus = async (source, destination, trip_date) => {
@@ -17,7 +22,7 @@ const SearchState = (props) => {
     setSearchRes(sres);
   };
   return (
-    <SearchContext.Provider value={{ searchRes, searchBus }}>
+    <SearchContext.Provider value={{ search, setSearch, searchRes, searchBus }}>
       {props.children}
     </SearchContext.Provider>
   );

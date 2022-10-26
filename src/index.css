@@ -11,33 +11,125 @@
 }
 
 .twowaychang-new:before {
-    display: block;
-    content: '';
-    background: #e1e1e1;
-    width: 1px;
-    height: 54.8px;
-    margin-left: 16px;
-    border-left: 1px solid #e1e1e1;
-    margin-top: -14px;
-    position: absolute;
-    z-index: 0;
+  display: block;
+  content: "";
+  background: #e1e1e1;
+  width: 1px;
+  height: 54.8px;
+  margin-left: 16px;
+  border-left: 1px solid #e1e1e1;
+  margin-top: -14px;
+  position: absolute;
+  z-index: 0;
 }
 
-#edittwoway{
+#edittwoway {
   padding: 0px;
   margin: -28px;
   position: relative;
   top: 59px;
 }
 
-.row-one, .row-two{
+/*Reservation Form*/
+
+.main-container {
+  border: 2px solid black;
+  border-radius: 6px;
+  padding: 11px;
+}
+
+.h3-primary{
+  text-align: center;
+  margin: 30px;
+}
+
+.showcase li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.showcase {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #777;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bus-outline{
+  width: 175px;
+  margin: auto;
+  border: 2px solid rgb(114, 73, 73);
+}
+
+.driver{
+  background: url("./steering-wheel.png");
+  height: 30px; 
+  width: 30px;
+  background-size: cover;
+  margin: 5px 0px 9px 138px;
+}
+
+.frontSeats{
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.backSeats{
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+
+.leftSeats,.rightSeats{
+  display: grid;
+  justify-content: center;
+  gap: 2px;
+  grid-template-columns: repeat(2,auto);
+}
+
+.seat {
+  background-color: #444451;
+  height: 20px;
+  width: 21px;
+  margin: 3px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.seat.selected {
+  background-color: #6feaf6;
+}
+
+.seat.occupied {
+  background-color: rgb(173, 228, 173);
+}
+
+.showcase li small {
+  margin-left: 10px;
+}
+
+.seat:not(.occupied):hover{
+  cursor: default;
+  transform: scale(1.2);
+}
+
+.row-one,
+.row-two {
   margin: 0 auto;
 }
-.row-three, .row-four, .row-five, .row-six{
+.row-three,
+.row-four,
+.row-five,
+.row-six {
   margin: 2rem auto;
 }
 
-.service-type{
+.service-type {
   font-size: 2rem;
 }
-

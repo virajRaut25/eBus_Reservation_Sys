@@ -1,16 +1,11 @@
 import React from "react";
 import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import searchContext from "../context/search/searchContext";
-import BusItems from "./BusItems";
 
 export default function SearchBus() {
   const context = useContext(searchContext);
-  const { searchBus, searchRes } = context;
-  const [search, setSearch] = useState({
-    source: "",
-    destination: "",
-    trip_date: "",
-  });
+  const { search, setSearch, searchBus, searchRes } = context;
   const onChange = (e) => {
     setSearch({ ...search, [e.target.name]: e.target.value });
   };
@@ -153,29 +148,20 @@ export default function SearchBus() {
                   </a>
                 </div>
                 <div className="col-md-auto" style={{ marginLeft: "-26px" }}>
-                  <button
+                  <Link
+                    to="/searchResult" role="button"
                     tabIndex="4"
-                    type="button"
                     className="btn btn-primary px-5 py-4 border-right-radius"
                     onClick={handleClick}
                     style={{ height: "70px" }}
                   >
                     Search
-                  </button>
+                  </Link>
                 </div>
               </div>
             </form>
           </div>
         </div>
-      </div>
-      <div className="my-3">
-        <h2>Available Buses</h2>
-        <div className="container">
-          {searchRes.length === 0 && "Not Available"}
-        </div>
-        {searchRes.map((sbus, index) => {
-          return <BusItems key={index} bus={sbus} search={search}/>;
-        })}
       </div>
     </>
   );

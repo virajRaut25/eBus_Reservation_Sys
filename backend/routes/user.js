@@ -114,4 +114,27 @@ router.post(
   }
 );
 
+// Route 2: Get Trip Details : Post "/api/user/tripDetails". Sign-in Required
+router.post(
+  "/tripDetails",
+  [
+    body("id", "Trip id Must be mentioned").notEmpty(),
+  ],
+  async (req, res) => {
+    // If there are errors, return Bad request and the errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const { id } = req.body;
+      let tripDetails = await Trip.findById(id);
+      res.json(tripDetails)
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Internal Servel Error");
+    }
+  }
+);
+
 module.exports = router;

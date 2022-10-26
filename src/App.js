@@ -7,10 +7,14 @@ import ManageBooking from "./Components/ManageBooking";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
 import SearchState from "./context/search/SearchState";
+import SearchResult from "./Components/SearchResult";
+import ReservationForm from "./Components/ReservationForm";
+import ReservationState from "./context/reservation/ReservationState";
 
 function App() {
   return (
     <>
+      <ReservationState>
       <SearchState>
         <Router>
           <Navbar />
@@ -22,6 +26,8 @@ function App() {
                 path="/manageBooking"
                 element={<ManageBooking />}
               ></Route>
+              <Route exact path="/searchResult" element={<SearchResult />}></Route>
+              <Route exact path="/reservationForm" element={<ReservationForm />}></Route>
               <Route exact path="/help" element={<Help />}></Route>
               <Route exact path="/signIn" element={<SignIn />}></Route>
               <Route exact path="/signUp" element={<SignUp />}></Route>
@@ -29,6 +35,7 @@ function App() {
           </div>
         </Router>
       </SearchState>
+      </ReservationState>
     </>
   );
 }
