@@ -1,11 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+  const host = "http://localhost:5000";
+  let navigate = useNavigate();
   const [credential, setCredential] = useState({
     fname: "",
     lname: "",
     dob: "",
-    phone: "",
+    mobile: "",
     email: "",
     address: "",
     password: "",
@@ -14,10 +17,46 @@ export default function SignUp() {
   const onChange = (e) => {
     setCredential({ ...credential, [e.target.name]: e.target.value });
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { fname, lname, dob, mobile, email, address, password, cpassword } =
+      credential;
+    if (password === cpassword) {
+      const response = await fetch(`${host}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fname,
+          lname,
+          dob,
+          mobile,
+          email,
+          address,
+          password,
+        }),
+      });
+      const json = await response.json();
+      console.log(json);
+      if (json.success) {
+        localStorage.setItem("token", json.authtoken);
+        navigate("/");
+      } else {
+        if (json.error) {
+          alert(json.error);
+        } else {
+          console.log(json.error[0].msg);
+        }
+      }
+    } else {
+      alert("Passwords don't Match");
+    }
+  };
   return (
     <div className="container my-3">
       <h2>Create an account to Book Ticket</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row g-3 mb-3">
           <div className="col-md-4">
             <label htmlFor="fname" className="form-label">
@@ -60,22 +99,21 @@ export default function SignUp() {
               name="dob"
               value={credential.dob}
               onChange={onChange}
-              minLength={3}
               required
             />
           </div>
         </div>
         <div className="row g-3 mb-3">
           <div className="col-md-5">
-            <label htmlFor="phone" className="form-label">
+            <label htmlFor="mobile" className="form-label">
               Mobile No.
             </label>
             <input
               type="phone"
               className="form-control"
-              id="phone"
-              name="phone"
-              value={credential.phone}
+              id="mobile"
+              name="mobile"
+              value={credential.mobile}
               onChange={onChange}
               minLength={10}
               maxLength={10}

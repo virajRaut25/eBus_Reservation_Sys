@@ -65,7 +65,7 @@ router.post(
       if (no_of_passengers <= availability) {
         let newAvailability = availability - passenger_list.length;
         let booked_seats_list = tripDetails.book_seats_no;
-        console.log(booked_seats_list)
+        console.log(booked_seats_list);
         passenger_list.forEach((element) => {
           booked_seats_list.push(element.seat_no);
         });
@@ -103,9 +103,8 @@ router.post(
           },
         });
         res.json({ saveReservation, tripDetails });
-      }
-      else{
-        return res.json(`Sorry!! Only ${availability} seats are available`)
+      } else {
+        return res.json(`Sorry!! Only ${availability} seats are available`);
       }
     } catch (error) {
       console.error(error.message);
@@ -117,9 +116,7 @@ router.post(
 // Route 2: Get Trip Details : Post "/api/user/tripDetails". Sign-in Required
 router.post(
   "/tripDetails",
-  [
-    body("id", "Trip id Must be mentioned").notEmpty(),
-  ],
+  [body("id", "Trip id Must be mentioned").notEmpty()],
   async (req, res) => {
     // If there are errors, return Bad request and the errors
     const errors = validationResult(req);
@@ -129,12 +126,22 @@ router.post(
     try {
       const { id } = req.body;
       let tripDetails = await Trip.findById(id);
-      res.json(tripDetails)
+      res.json(tripDetails);
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Servel Error");
     }
   }
 );
+
+// Route 3: Get Reservation Details : Post "/api/user/reservationDetails". Sign-in Required
+router.post("/reservationDetails", fetchuser, async (req, res) => {
+  try {
+    const reserve = await Reservation.find({ user_id: req.user.id });
+    res.json(reserve);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 module.exports = router;

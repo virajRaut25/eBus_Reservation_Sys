@@ -1,0 +1,55 @@
+@media (max-width: 992px) {
+  .input-group {
+    flex-direction: column;
+  }
+  .input-group > .form-floating {
+    width: 100%;
+  }
+  .form-floating > .form-control,
+  .input-group > .btn {
+    border-radius: 0px;
+  }
+  .container-fluid > .row .col > .search-head {
+    font-size: 1.7rem;
+    margin-bottom: 0.7rem;
+    margin-top: -22px;
+  }
+}
+
+.main-bg-sec {
+  background: url(/src/images/bus-seach-bg-new-v3.webp)
+    no-repeat top center;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.input-group > .btn {
+  padding-top: 1rem;
+}
+.search-head {
+  font-size: 2rem;
+  margin-bottom: 4rem;
+  margin-top: 3rem;
+}
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+.icon {
+  position: absolute;
+  padding-top: 1rem;
+  padding-left: 0.4rem;
+}
+.form-control:focus, .form-select:focus {
+  border-color: rgba(245, 56, 68);
+  box-shadow: 0 0 0 0rem rgba(245, 56, 68, 0.6);
+}
+.form-floating > .form-control,
+.form-floating > label {
+  padding: 1rem 2.5rem;
+}
+

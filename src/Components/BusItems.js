@@ -1,13 +1,12 @@
 import React from "react";
 import fareCal from "../fareCal";
-import { Link } from "react-router-dom";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import reservationContext from "../context/reservation/reservationContext";
-
 
 export default function BusItems(props) {
   const { bus, search } = props;
-
+  let navigate = useNavigate();
   function toHoursAndMinutes(totalMinutes) {
     const minutes = totalMinutes % 60;
     const hours = Math.floor(totalMinutes / 60);
@@ -25,7 +24,6 @@ export default function BusItems(props) {
   let boarding_points = bus.route_id.boarding_points;
   let alighting_points = bus.route_id.alighting_points;
   let dKm = alighting_points[alighting_points.length - 1].aKm;
-  console.log(dKm);
   let bKm, aKm;
   boarding_points.forEach((ele) => {
     if (ele.name === search.source) {
@@ -48,15 +46,15 @@ export default function BusItems(props) {
   journeyDur = toHoursAndMinutes(journeyDur);
   let bTime = Math.round(bKm * 2);
   bTime = toHoursAndMinutes(bTime);
-  bTime = Number(bTime.replace(":","."));
+  bTime = Number(bTime.replace(":", "."));
   bTime += dpTime;
-  bTime = bTime.toFixed(2).replace(".",":")
+  bTime = bTime.toFixed(2).replace(".", ":");
 
   let aTime = Math.round(aKm * 2);
   aTime = toHoursAndMinutes(aTime);
-  aTime = Number(aTime.replace(":","."));
+  aTime = Number(aTime.replace(":", "."));
   aTime += dpTime;
-  aTime = aTime.toFixed(2).replace(".",":")
+  aTime = aTime.toFixed(2).replace(".", ":");
 
   let fare = 0;
   fare = fareCal(tKm);
@@ -64,30 +62,39 @@ export default function BusItems(props) {
   const context = useContext(reservationContext);
   const { setRev, searchTrip } = context;
 
-  const handleRev = ()=>{
-    searchTrip(bus._id);
-    setRev({
-      trip_id: bus._id,
-      book_seats_no: bus.book_seats_no,
-      service_type: bus.bus_id.service_type,
-      source: bus.route_id.source,
-      sd_time: bus.sd_time,
-      destination: bus.route_id.destination,
-      destTime,
-      boarding_point: search.source,
-      bTime,
-      alighting_point: search.destination,
-      aTime,
-      journeyDur,
-      fare,
-      availability:bus.availability,
-     })
-  }
-  
+  const handleRev = () => {
+    if (!localStorage.getItem("token")) {
+      alert("Sign In to Book Ticket");
+      navigate("/signIn");
+    } else {
+      navigate("/reservationForm")
+      searchTrip(bus._id);
+      setRev({
+        trip_id: bus._id,
+        trip_date: bus.trip_date,
+        book_seats_no: bus.book_seats_no,
+        service_type: bus.bus_id.service_type,
+        source: bus.route_id.source,
+        sd_time: bus.sd_time,
+        destination: bus.route_id.destination,
+        destTime,
+        boarding_point: search.source,
+        bTime,
+        alighting_point: search.destination,
+        aTime,
+        journeyDur,
+        fare,
+        availability: bus.availability,
+      });
+    }
+  };
+
   return (
     <div className="card w-90" style={{ margin: "4px auto" }}>
       <div className="card-body">
-        <div className="lh-24 f-bold p-1 service-type">{bus.bus_id.service_type}</div>
+        <div className="lh-24 f-bold p-1 service-type">
+          {bus.bus_id.service_type}
+        </div>
         <div className="d-flex justify-content-between">
           <div className="p-1 w-10 row-one">
             <div className="lh-24 f-bold">{bus.route_id.source}</div>
@@ -114,7 +121,14 @@ export default function BusItems(props) {
             <div className="f-12 mt-1 text-secondary">{bus.availability}</div>
           </div>
           <div className="p-1 w-10 row-six">
-            <Link className="btn btn-primary" to='/reservationForm' onClick={()=>{handleRev()}}>Book Ticket</Link>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                handleRev();
+              }}
+            >
+              Book Ticket
+            </button>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import SearchContext from "./searchContext";
 
 const SearchState = (props) => {
   const host = "http://localhost:5000";
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState({
     source: "",
     destination: "",
@@ -20,9 +21,12 @@ const SearchState = (props) => {
     });
     const sres = await response.json();
     setSearchRes(sres);
+    setSearch({ source, destination, trip_date });
   };
   return (
-    <SearchContext.Provider value={{ search, setSearch, searchRes, searchBus }}>
+    <SearchContext.Provider
+      value={{ search, loading, setLoading, searchRes, searchBus }}
+    >
       {props.children}
     </SearchContext.Provider>
   );

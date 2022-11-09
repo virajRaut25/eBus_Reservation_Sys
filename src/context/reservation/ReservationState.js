@@ -4,24 +4,68 @@ import ReservationContext from "./reservationContext";
 const ReservationState = (props) => {
   const host = "http://localhost:5000";
   const [tripDetails, setTripDetails] = useState([]);
+  const [pass, setPass] = useState(null);
+  const [rev, setRev] = useState({});
+  const [reserve, setReserve] = useState({});
   // Search Bus
   const searchTrip = async (id) => {
     const response = await fetch(`${host}/api/user/tripDetails`, {
       method: "POST",
       headers: {
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJlZmI1MTRjNTIwOThhZTNiZWFhNThjIn0sImlhdCI6MTY1OTg3NjYyOH0.U6ZfFRracfUg3nljgZo5pQewpE5q6EqUZUWoieKMuas",
+        "auth-token": localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
-      body: JSON.stringify( {id: id} ),
+      body: JSON.stringify({ id: id }),
     });
     const tripRes = await response.json();
     setTripDetails(tripRes);
   };
-  const [rev, setRev] = useState({});
+
+  // Make Reservation
+  const makeReservation = async (
+    id,
+    boarding_point,
+    alighting_point,
+    passenger_list
+  ) => {
+    const response = await fetch(`${host}/api/user/book/${id}`, {
+      method: "POST",
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ boarding_point, alighting_point, passenger_list }),
+    });
+    const res = await response.json();
+    setReserve(res);
+    console.log(reserve);
+  };
+
+  // Get Reservation Details
+  const getReserve = async () => {
+    const response = await fetch(`${host}/api/user/reservationDetails`, {
+      method: "POST",
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+    });
+    return response.json();
+  };
+
   return (
     <ReservationContext.Provider
-      value={{ rev, setRev, searchTrip, tripDetails }}
+      value={{
+        rev,
+        setRev,
+        reserve,
+        makeReservation,
+        getReserve,
+        searchTrip,
+        tripDetails,
+        pass,
+        setPass,
+      }}
     >
       {props.children}
     </ReservationContext.Provider>

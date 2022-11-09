@@ -42,7 +42,14 @@ router.post(
       if (user) {
         return res.status(400).json({
           success,
-          error: "Sorry a User with this email already exists",
+          error: "Sorry a User with this email Id already exists",
+        });
+      }
+      user = await User.findOne({ mobile: req.body.mobile });
+      if (user) {
+        return res.status(400).json({
+          success,
+          error: "Sorry a User with this mobile number already registered with another email Id",
         });
       }
 

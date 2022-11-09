@@ -1,33 +1,18 @@
-.main-bg-sec {
-  /*background: url(//static.abhibus.com/img/abhilogos/bus-seach-bg-abhilogos.jpg) no-repeat top center;*/
-  /*background: url(//static.abhibus.com/assets/img/bus-seach-bg.png) no-repeat top center;*/
-  /*background: url(//static.abhibus.com/img/abhilogos/bus-seach-bg-new-v1.png) no-repeat top center;*/
-  /*background: url(//static.abhibus.com/img/abhilogos/bus-seach-bg-new-v3.jpg) no-repeat top center;*/
-  /*background: url(//static.abhibus.com/img/abhilogos/bus-seach-bg-new-v3.jpg) no-repeat top center;*/
-  background: url(//static.abhibus.com/img/dussarha-bg.jpg) no-repeat top center;
+/* Search Result Card */
+
+.row-one,
+.row-two {
+  margin: 0 auto;
 }
-.twowaychang-new {
-  background: #fff;
+.row-three,
+.row-four,
+.row-five,
+.row-six {
+  margin: 2rem auto;
 }
 
-.twowaychang-new:before {
-  display: block;
-  content: "";
-  background: #e1e1e1;
-  width: 1px;
-  height: 54.8px;
-  margin-left: 16px;
-  border-left: 1px solid #e1e1e1;
-  margin-top: -14px;
-  position: absolute;
-  z-index: 0;
-}
-
-#edittwoway {
-  padding: 0px;
-  margin: -28px;
-  position: relative;
-  top: 59px;
+.service-type {
+  font-size: 2rem;
 }
 
 /*Reservation Form*/
@@ -67,7 +52,7 @@
 }
 
 .driver{
-  background: url("./steering-wheel.png");
+  background: url("/src/images/steering-wheel.png");
   height: 30px; 
   width: 30px;
   background-size: cover;
@@ -119,17 +104,43 @@
   transform: scale(1.2);
 }
 
-.row-one,
-.row-two {
-  margin: 0 auto;
-}
-.row-three,
-.row-four,
-.row-five,
-.row-six {
-  margin: 2rem auto;
+/* Receipt */
+
+.receipt-container{
+  padding: 30px;
 }
 
-.service-type {
-  font-size: 2rem;
+.receipt-head{
+  display: flex;
+  align-items: center;
+}
+
+.receipt-title{
+  flex-grow: 2;
+}
+
+.bus-logo{
+  background: url("/src/images/bus.png");
+  height: 90px; 
+  width: 90px;
+  background-size: cover;
+}
+
+.receipt-mainHead{
+  text-align: center;
+}
+
+.receipt-subHead{
+  text-align: center;
+}
+
+.info-para{
+  font-weight: bold;
+}
+
+.greet-para{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
 }

@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function PassengerDetails(props) {
+  const {onChange, passDetails} = props;
   return (
     <>
       <div className="h4-primary mt-2 mb-2">Passenger {props.index + 1}</div>
@@ -12,6 +13,8 @@ export default function PassengerDetails(props) {
               className="form-control"
               id="floatingInputGroup1"
               placeholder="pasname"
+              onChange={event => onChange(event, props.index)}
+              value={passDetails.passname}
               name="passname"
             />
             <label htmlFor="floatingInputGroup1">Name</label>
@@ -19,8 +22,9 @@ export default function PassengerDetails(props) {
         </div>
         <div className="col-md">
           <div className="form-floating">
-            <select className="form-select" name="gender" id="floatingSelectGrid">
-              <option value="Male">Male</option>
+            <select className="form-select" name="gender" value={passDetails.gender} onChange={event => onChange(event, props.index)} id="floatingSelectGrid">
+              <option value="Click on Arrow" defaultChecked>Click on Arrow</option>
+              <option value="Male" >Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
@@ -35,6 +39,8 @@ export default function PassengerDetails(props) {
                 className="form-control"
                 id="floatingInputGroup1"
                 placeholder="Age"
+                value={passDetails.age}
+                onChange={event => onChange(event, props.index)}
                 name="age"
               />
               <label htmlFor="floatingInputGroup1">Age</label>
@@ -46,12 +52,13 @@ export default function PassengerDetails(props) {
             <div className="form-floating">
               <input
                 type="number"
-                disabled
+                onChange={event => onChange(event, props.index)}
                 className="form-control"
+                disabled
                 id="floatingPlaintextInput"
-                value={props.seatNo}
+                defaultValue={props.seatNo}
               />
-              <label htmlhtmlFor="floatingPlaintextInput">Seat Number</label>
+              <label htmlFor="floatingPlaintextInput">Seat Number</label>
             </div>
           </div>
         </div>

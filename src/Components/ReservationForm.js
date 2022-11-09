@@ -1,33 +1,59 @@
 import React from "react";
 import { useContext, useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import reservationContext from "../context/reservation/reservationContext";
-import PassengerDetails from "./PassengerDetails";
 export default function ReservationForm() {
+  let navigate = useNavigate();
   const context = useContext(reservationContext);
-  const { rev, tripDetails } = context;
+  const { rev, tripDetails, setPass, makeReservation } = context;
   const seats = document.querySelectorAll(
-    ".frontSeats .seat:not(.occupied), .backSeats .seat:not(.occupied)"
+    ".frontSeats .seat, .backSeats .seat"
   );
-
   const [seatIndex, setSeatIndex] = useState([]);
   const ref = useRef(null);
+  const passengerTemplate = { name: "", age: "", gender: "", seat_no: "" };
+  const [passDetails, setPassDetails] = useState([]);
+  const onChange = (event, index) => {
+    let data = [...passDetails];
+    data[index][event.target.name] = event.target.value;
+    setPassDetails(data);
+  };
+  const addPassenger = () => {
+    setPassDetails([...passDetails, passengerTemplate]);
+  };
+  const removePassenger = (index) => {
+    const filteredPassenger = [...passDetails];
+    filteredPassenger.splice(index, 1);
+    setPassDetails(filteredPassenger);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(seatIndex);
+    for (let i = 0; i < seatIndex.length; i++) {
+      passDetails[i].seat_no = seatIndex[i];
+    }
+    console.log(passDetails);
+    makeReservation(rev.trip_id, rev.boarding_point, rev.alighting_point, passDetails);
+    setPass(passDetails);
+    navigate("/receipt");
+  };
   useEffect(
     () => {
-      const orgSeat = document.querySelectorAll(
-        ".frontSeats .seat, .backSeats .seat"
-      );
-      console.log(tripDetails.book_seats_no);
-      const booked_seats = tripDetails.book_seats_no;
-      if (booked_seats !== null && booked_seats.length > 0) {
-        orgSeat.forEach((seat, index) => {
-          if (booked_seats.indexOf(index) > -1) {
-            seat.classList.add("occupied");
-          }
-        });
+      try {
+        const booked_seats = tripDetails.book_seats_no;
+        if (booked_seats !== null && booked_seats.length > 0) {
+          seats.forEach((seat, index) => {
+            if (booked_seats.indexOf(index) > -1) {
+              seat.classList.add("occupied");
+            }
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
     // eslint-disable-next-line
-    [tripDetails]
+    [tripDetails.book_seats_no]
   );
   useEffect(
     () => {
@@ -43,8 +69,17 @@ export default function ReservationForm() {
           const tempIndex = [...selectedSeats].map((seat) =>
             [...seats].indexOf(seat)
           );
-          setSeatIndex(tempIndex);
-          console.log(seatIndex);
+          if (tempIndex.at(-1) !== -1) {
+            setSeatIndex(tempIndex);
+          }
+          if (e.target.classList.contains("selected")) {
+            console.log("passenger Added");
+            addPassenger();
+          }
+          if (!e.target.classList.contains("selected")) {
+            removePassenger(tempIndex.length);
+          }
+          console.log(tempIndex);
           // localStorage.setItem("selectedSeats", JSON.stringify(seatIndex));
         }
       };
@@ -90,7 +125,7 @@ export default function ReservationForm() {
           </div>
           <div className="p-1 w-10 row-five">
             <div className="lh-24 f-bold">Availability</div>
-            <div className="f-12 mt-1 text-secondary">{rev.availability}</div>
+            <div className="f-12 mt-1 text-secondary">{tripDetails.availability}</div>
           </div>
         </div>
       </div>
@@ -156,13 +191,87 @@ export default function ReservationForm() {
         <div className="fillDetails">
           <h3 className="h3-primary">Fill Details</h3>
           <div className="form">
-            <form action="" method="post">
-              {seatIndex.map((seatNo, index) => {
-                return <PassengerDetails index={index} seatNo={seatNo} />;
+            <form onSubmit={handleSubmit}>
+              {passDetails.map((form, index) => {
+                return (
+                  <div key={index}>
+                    <div className="h4-primary mt-2 mb-2">
+                      Passenger {index + 1}
+                    </div>
+                    <div className="row g-4">
+                      <div className="input-group col-md">
+                        <div className="form-floating">
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="floatingInputGroup1"
+                            placeholder="pasname"
+                            onChange={(event) => onChange(event, index)}
+                            value={form.name}
+                            name="name"
+                          />
+                          <label htmlFor="floatingInputGroup1">Name</label>
+                        </div>
+                      </div>
+                      <div className="col-md">
+                        <div className="form-floating">
+                          <select
+                            className="form-select"
+                            name="gender"
+                            value={form.gender}
+                            onChange={(event) => onChange(event, index)}
+                            id="floatingSelectGrid"
+                          >
+                            <option value="Click on Arrow" defaultChecked>
+                              Click on Arrow
+                            </option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <label htmlFor="floatingSelectGrid">Gender</label>
+                        </div>
+                      </div>
+                      <div className="col-md">
+                        <div className="input-group col-md">
+                          <div className="form-floating">
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="floatingInputGroup1"
+                              placeholder="Age"
+                              value={form.age}
+                              onChange={(event) => onChange(event, index)}
+                              name="age"
+                            />
+                            <label htmlFor="floatingInputGroup1">Age</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md">
+                        <div className="input-group col-md">
+                          <div className="form-floating">
+                            <input
+                              type="number"
+                              onChange={(event) => onChange(event, index)}
+                              className="form-control"
+                              disabled
+                              id="floatingPlaintextInput"
+                              value={seatIndex[index]}
+                            />
+                            <label htmlFor="floatingPlaintextInput">
+                              Seat Number
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
               })}
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-danger"
                 style={{
                   display: "block",
                   margin: "25px auto",
