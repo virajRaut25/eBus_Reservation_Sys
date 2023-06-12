@@ -49,7 +49,8 @@ router.post(
       if (user) {
         return res.status(400).json({
           success,
-          error: "Sorry a User with this mobile number already registered with another email Id",
+          error:
+            "Sorry a User with this mobile number already registered with another email Id",
         });
       }
 
@@ -133,15 +134,59 @@ router.post(
 
 // Route 3: Get loggedIn user details using: POST "/api/auth/getuser". Sign In required
 router.post("/getuser", fetchuser, async (req, res) => {
+  try {
+    userId = req.user.id;
+    console.log(req.user);
+    const user = await User.findById(userId).select("-password");
+    res.json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Route 4: Reset Password using PUT "/api/auth/resetpass". No Sign In required
+router.put(
+  "/resetpass",
+  [
+    body("email", "Enter Valid Email Id").isEmail(),
+    body("mobile", "Enter Valid Mobile No.").isMobilePhone(),
+    body("password", "The Mininum Length of password must be 8").isLength({
+      min: 8,
+    }),
+  ],
+  async (req, res) => {
+    let success = false;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success, errors: errors.array() });
+    }
     try {
-      userId = req.user.id;
-      console.log(req.user);
-      const user = await User.findById(userId).select("-password");
-      res.json(user);
+      const { email, mobile, password } = req.body;
+      let user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({
+          success,
+          error: "Please enter correct credentials.",
+        });
+      }
+      const mob = user.mobile;
+      if (mob !== mobile) {
+        return res.status(400).json({
+          success,
+          error: "Please enter correct credentials.",
+        });
+      }
+      const salt = await bcrypt.genSalt(10);
+      const secPass = await bcrypt.hash(password, salt);
+      user = await User.findByIdAndUpdate(user._id, {password: secPass});
+      success = true;
+      res.json({success});
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server Error");
     }
-  });
+  }
+);
 
 module.exports = router;

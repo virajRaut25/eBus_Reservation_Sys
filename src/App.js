@@ -11,21 +11,36 @@ import SearchResult from "./Components/SearchResult";
 import ReservationForm from "./Components/ReservationForm";
 import ReservationState from "./context/reservation/ReservationState";
 import Receipt from "./Components/Receipt";
+import Alert from "./Components/Alert";
+import { useState } from "react";
+import ForgotPass from "./Components/ForgotPass";
+import Footer from "./Components/Footer";
 
 function App() {
+  const [alert, setalert] = useState();
+  const showAlert = (type, message) => {
+    setalert({
+      type: type,
+      msg: message,
+    });
+    setTimeout(() => {
+      setalert(null);
+    }, 2500);
+  };
   return (
     <>
       <ReservationState>
         <SearchState>
           <Router>
-            <Navbar />
+            <Navbar showAlert={showAlert}/>
+            <Alert alert={alert}/>
             <div className="container">
               <Routes>
                 <Route exact path="/" element={<Home />}></Route>
                 <Route
                   exact
                   path="/manageBooking"
-                  element={<ManageBooking />}
+                  element={<ManageBooking showAlert={showAlert}/>}
                 ></Route>
                 <Route
                   exact
@@ -35,14 +50,16 @@ function App() {
                 <Route
                   exact
                   path="/reservationForm"
-                  element={<ReservationForm />}
+                  element={<ReservationForm showAlert={showAlert}/>}
                 ></Route>
-                <Route exact path="/receipt" element={<Receipt />}></Route>
+                <Route exact path="/receipt" element={<Receipt showAlert={showAlert}/>}></Route>
                 <Route exact path="/help" element={<Help />}></Route>
-                <Route exact path="/signIn" element={<SignIn />}></Route>
-                <Route exact path="/signUp" element={<SignUp />}></Route>
+                <Route exact path="/signIn" element={<SignIn showAlert={showAlert}/>}></Route>
+                <Route exact path="/signUp" element={<SignUp showAlert={showAlert}/>}></Route>
+                <Route exact path="/forgotPass" element={<ForgotPass showAlert={showAlert}/>}></Route>
               </Routes>
             </div>
+            <Footer />
           </Router>
         </SearchState>
       </ReservationState>

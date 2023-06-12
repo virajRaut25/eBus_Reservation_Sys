@@ -1,3 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:ital@1&display=swap");
+
+/* Carousel CSS  */
+
+.carousel {
+  margin-top: 1rem;
+}
+
+.carousel-inner {
+  border-radius: 6rem;
+  box-shadow: 12px 12px 36px hsla(0, 0%, 0%, 0.5);
+}
+
+.corl-head {
+  font-family: cursive;
+  color: rgb(255 93 93);
+  text-shadow: 2px 2px 3px #ed8282;
+}
+
+.corl {
+  height: 45vh;
+  object-fit: fill;
+}
+
+.first_img {
+  background: url(/src/images/bus_image.jpg) no-repeat center;
+}
+
+.second_img {
+  background: url(/src/images/bus_interior.jpg) no-repeat center;
+}
+
 /* Search Result Card */
 
 .row-one,
@@ -15,6 +47,14 @@
   font-size: 2rem;
 }
 
+.arrow {
+  content: url(./images/arrow-down-long.svg);
+  margin-bottom: -9px;
+  margin-left: 9px;
+  height: 1.2rem;
+  transition: all 0.5s;
+}
+
 /*Reservation Form*/
 
 .main-container {
@@ -23,7 +63,7 @@
   padding: 11px;
 }
 
-.h3-primary{
+.h3-primary {
   text-align: center;
   margin: 30px;
 }
@@ -45,37 +85,37 @@
   justify-content: space-between;
 }
 
-.bus-outline{
+.bus-outline {
   width: 175px;
   margin: auto;
   border: 2px solid rgb(114, 73, 73);
 }
 
-.driver{
+.driver {
   background: url("/src/images/steering-wheel.png");
-  height: 30px; 
+  height: 30px;
   width: 30px;
   background-size: cover;
   margin: 5px 0px 9px 138px;
 }
 
-.frontSeats{
+.frontSeats {
   display: flex;
   justify-content: space-between;
-
 }
 
-.backSeats{
+.backSeats {
   display: flex;
   justify-content: center;
   gap: 2px;
 }
 
-.leftSeats,.rightSeats{
+.leftSeats,
+.rightSeats {
   display: grid;
   justify-content: center;
   gap: 2px;
-  grid-template-columns: repeat(2,auto);
+  grid-template-columns: repeat(2, auto);
 }
 
 .seat {
@@ -99,48 +139,237 @@
   margin-left: 10px;
 }
 
-.seat:not(.occupied):hover{
+.seat:not(.occupied):hover {
   cursor: default;
   transform: scale(1.2);
 }
 
 /* Receipt */
 
-.receipt-container{
+.receipt-container {
   padding: 30px;
 }
 
-.receipt-head{
+.receipt-head {
   display: flex;
   align-items: center;
 }
 
-.receipt-title{
+.receipt-title {
   flex-grow: 2;
 }
 
-.bus-logo{
+.bus-logo {
   background: url("/src/images/bus.png");
-  height: 90px; 
+  height: 90px;
   width: 90px;
   background-size: cover;
 }
 
-.receipt-mainHead{
+.receipt-mainHead {
   text-align: center;
 }
 
-.receipt-subHead{
+.receipt-subHead {
   text-align: center;
 }
 
-.info-para{
+.info-para {
   font-weight: bold;
 }
 
-.greet-para{
+.greet-para {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+}
+
+/* Manage Booking */
+#confirmCancel {
+  width: 90%;
+}
+
+#confirmCancel:focus {
+  outline: none !important;
+  border: 2px solid salmon;
+  box-shadow: 0 0 10px salmon;
+}
+
+/* Footer */
+.custom_foot {
+  padding: 0.3rem 2rem;
+  background-color: rgb(226 107 98 / 88%);
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 0px;
+}
+
+/* Help */
+
+.help-topic {
+  background-color: #ed8282;
+  padding: 1rem;
+  border-radius: 2rem;
+  box-shadow: 5px 5px 15px 0px rgb(0 0 0 / 40%);
+}
+
+.help-text,
+.video-body {
+  background-color: #eedbdbb3;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  height: 100%;
+  width: 100%;
+  margin: 0.2rem;
+}
+
+.help-heading {
+  align-self: flex-start;
+  margin-left: 1rem;
+  font-size: 2rem;
+}
+
+.inner-help > ol {
+  font-size: 1.1rem;
+}
+
+.inner-help {
+  padding: 0.5rem;
+}
+
+.inner-help > p {
+  margin: 0;
+}
+
+/* Developer Contact */
+
+.contact-dev {
+  width: 12rem;
+  height: 12rem;
+  border-radius: 12rem;
+  margin: auto;
+  padding: 2px;
+  background: #e67d75;
+  box-shadow: 3px 3px 4px;
+}
+
+.linked-in {
+  content: url(./images/linkedin.svg);
+  margin-bottom: -9px;
+  margin-left: 9px;
+  height: 1.8rem;
+  transition: all 0.5s;
+}
+
+.youtube {
+  content: url(./images/youtube.svg);
+  margin-bottom: -9px;
+  margin-left: 9px;
+  height: 1.8rem;
+  transition: all 0.5s;
+}
+
+.git-hub {
+  content: url(./images/github.svg);
+  margin-bottom: -9px;
+  margin-left: 9px;
+  height: 1.8rem;
+  transition: all 0.5s;
+}
+
+.twitter {
+  content: url(./images/twitter.svg);
+  margin-bottom: -9px;
+  margin-left: 9px;
+  height: 1.8rem;
+  transition: all 0.5s;
+}
+
+.git-hub:hover,
+.twitter:hover,
+.youtube:hover,
+.linked-in:hover {
+  filter: invert(1);
+}
+
+/* Media Queries for Responsive Design */
+
+@media screen and (max-width: 1200px) {
+  .help-heading {
+    font-size: 1.8rem;
+  }
+
+  .inner-help > ol {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 993px) {
+  .help-heading {
+    font-size: 1.2rem;
+  }
+
+  .inner-help > ol {
+    font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .help-heading {
+    font-size: 1.8rem;
+  }
+
+  .inner-help > ol {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .help-heading {
+    font-size: 1.45rem;
+  }
+
+  .inner-help > ol {
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .card-body {
+    font-size: 0.7rem;
+  }
+  .card-body
+    > div.d-flex.justify-content-between
+    > div.p-1.w-10.row-six
+    > button {
+    font-size: inherit;
+    padding: 4px 5px;
+  }
+  .help-heading {
+    font-size: 1.15rem;
+  }
+
+  .inner-help > ol {
+    font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .help-heading {
+    font-size: 0.7rem;
+  }
+
+  .inner-help > ol {
+    font-size: 0.6rem;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .help-heading {
+    font-size: 0.6rem;
+  }
+
+  .inner-help > ol {
+    font-size: 0.5rem;
+  }
 }

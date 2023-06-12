@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+#root{
+  font-family: "Roboto", sans-serif;
+}
+
 .App {
   text-align: center;
 }
@@ -28,6 +34,27 @@
   color: #61dafb;
 }
 
+.navbar{
+  opacity: 0.8;
+  transition: all 0.5s;
+}
+
+.navbar:hover{
+  opacity: 1;
+}
+
+.navbar-nav .nav-link.active, .navbar-nav .show>.nav-link {
+  color: rgb(255 0 0 / 90%);
+}
+
+.navbar-brand{
+  margin-bottom: 1px;
+  background: red;
+  padding: 9px 4px;
+  border-radius: 50px;
+  color: white;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,3 +63,5 @@
     transform: rotate(360deg);
   }
 }
+
+

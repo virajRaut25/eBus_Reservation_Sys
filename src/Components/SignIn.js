@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function SignIn() {
+export default function SignIn(props) {
+  const { showAlert } = props;
   const host = "http://localhost:5000";
   let navigate = useNavigate();
   const [credential, setCredential] = useState({ email: "", password: "" });
@@ -25,18 +26,23 @@ export default function SignIn() {
     if (json.success) {
       // Redirect
       localStorage.setItem("token", json.authtoken);
+      showAlert("success", "Sign In Successfully");
       navigate("/");
     } else {
       if (json.error) {
-        alert(json.error);
+        showAlert("danger", json.error);
       } else {
-        alert(json.errors[0].msg);
+        showAlert("danger", json.errors[0].msg);
       }
     }
   };
+  const handleForgotPass = (e) => {
+    e.preventDefault();
+    navigate("/forgotPass");
+  };
   return (
-    <div className="container my-3">
-      <h2>Sign In to continue on eBus</h2>
+    <div className="container mt-5">
+      <h2 className="pt-5">Sign In to continue on eBus</h2>
       <form className="my-3" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -50,6 +56,7 @@ export default function SignIn() {
             value={credential.email}
             aria-describedby="emailHelp"
             onChange={onChange}
+            required
           />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
@@ -70,8 +77,15 @@ export default function SignIn() {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-danger">
           Submit
+        </button>
+        <button
+          type="button"
+          className="btn btn-warning mx-2"
+          onClick={handleForgotPass}
+        >
+          Forgot Password
         </button>
       </form>
     </div>

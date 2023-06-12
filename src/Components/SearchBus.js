@@ -1,30 +1,45 @@
 import React from "react";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import "../searchBar.css";
 import searchContext from "../context/search/searchContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchBus() {
+  let navigate = useNavigate();
   const context = useContext(searchContext);
   const { searchBus, setLoading } = context;
   const [search, setSearch] = useState({
     source: "",
     destination: "",
     trip_date: "",
-  })
+  });
   setLoading(true);
   const onChange = (e) => {
     setSearch({ ...search, [e.target.name]: e.target.value });
   };
-  const captalize = (word)=>{
+  const captalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  }
-  const handleClick = () => {
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let source = captalize(search.source);
     let destination = captalize(search.destination);
-    searchBus(source, destination, search.trip_date);
-    setLoading(false);
+    await searchBus(source, destination, search.trip_date);
+    await setLoading(false);
+    navigate("/searchResult");
   };
+
+  useEffect(() => {
+    let dtToday = new Date();
+    let month = dtToday.getMonth() + 1;
+    let day = dtToday.getDate();
+    let year = dtToday.getFullYear();
+    if (month < 10) month = "0" + month.toString();
+    if (day < 10) day = "0" + day.toString();
+    let maxDate = year + "-" + month + "-" + day;
+    document.getElementById("floatingDate").setAttribute("min", maxDate);
+  }, []);
+
   return (
     <>
       <div className="justify-content-center d-none d-md-block d-lg-block main-bg-sec"></div>
@@ -32,7 +47,7 @@ export default function SearchBus() {
         <div className="row justify-content-center no-gutters">
           <div className="col pt-5">
             <h1 className="text-center search-head">Book Bus Tickets</h1>
-            <div className="searchBus">
+            <form className="searchBus" onSubmit={handleSubmit}>
               <div className="input-group">
                 <div className="form-floating">
                   <span className="icon">
@@ -49,6 +64,7 @@ export default function SearchBus() {
                     name="source"
                     value={search.source}
                     onChange={onChange}
+                    required
                   />
                   <label htmlFor="floatingSource">From</label>
                 </div>
@@ -67,6 +83,7 @@ export default function SearchBus() {
                     name="destination"
                     value={search.destination}
                     onChange={onChange}
+                    required={true}
                   />
                   <label htmlFor="floatingDestination">To</label>
                 </div>
@@ -85,20 +102,21 @@ export default function SearchBus() {
                     name="trip_date"
                     value={search.trip_date}
                     onChange={onChange}
+                    required={true}
                   />
                   <label htmlFor="floatingDate">Journey Date</label>
                 </div>
-                <Link
-                  role="button"
-                  to="/searchResult"
+                <button
                   className="btn btn-danger"
-                  onClick={handleClick}
-                  type="button"
+                  type="submit"
+                  style={{
+                    padding: "12px",
+                  }}
                 >
                   Search Buses
-                </Link>
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

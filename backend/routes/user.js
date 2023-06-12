@@ -7,42 +7,6 @@ const Reservation = require("../models/Reservation");
 
 const router = express.Router();
 
-function fareCal(tKm) {
-  let fare = 0;
-  if (60 < tKm && tKm <= 120) {
-    tKm /= 2;
-    div = 2;
-  } else if (120 < tKm && tKm <= 240) {
-    tKm /= 4;
-    div = 4;
-  } else if (240 < tKm && tKm <= 360) {
-    tKm /= 6;
-    div = 6;
-  } else if (360 < tKm && tKm <= 480) {
-    tKm /= 8;
-    div = 8;
-  } else if (480 < tKm && tKm <= 600) {
-    tKm /= 10;
-    div = 10;
-  }
-  for (let i = 0; i < div; i++) {
-    if (tKm <= 10) {
-      fare += 20;
-    } else if (10 < tKm && tKm <= 20) {
-      fare += 25;
-    } else if (20 < tKm && tKm <= 30) {
-      fare += 40;
-    } else if (30 < tKm && tKm <= 40) {
-      fare += 45;
-    } else if (40 < tKm && tKm <= 50) {
-      fare += 55;
-    } else if (50 > tKm && tKm <= 60) {
-      fare += 60;
-    }
-  }
-  return fare;
-}
-
 // Route 1: Make user reservation : Post "/api/user/book". Sign-in Required
 router.post(
   "/book/:id",
@@ -50,6 +14,10 @@ router.post(
   [
     body("boarding_point", "Boarding Point must be mentioned").notEmpty(),
     body("alighting_point", "Alighting Point must be mentioned").notEmpty(),
+    body(
+      "passenger_list",
+      "Atlest one Passenger reservation must be there"
+    ).notEmpty(),
   ],
   async (req, res) => {
     // If there are errors, return Bad request and the errors
@@ -58,7 +26,14 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const { boarding_point, alighting_point, passenger_list } = req.body;
+      const {
+        boarding_point,
+        alighting_point,
+        b_time,
+        a_time,
+        fare,
+        passenger_list,
+      } = req.body;
       let no_of_passengers = passenger_list.length;
       let tripDetails = await Trip.findById(req.params.id);
       let availability = tripDetails.availability;
@@ -69,31 +44,17 @@ router.post(
         passenger_list.forEach((element) => {
           booked_seats_list.push(element.seat_no);
         });
-        const busRoute = await BusRoute.findById(tripDetails.route_id);
-        let alighting_points = busRoute.alighting_points;
-        let boarding_points = busRoute.boarding_points;
-        let bKm, aKm;
-        boarding_points.forEach((ele) => {
-          if (ele.name === boarding_point) {
-            bKm = ele.bKm;
-          }
-        });
-        alighting_points.forEach((ele) => {
-          if (ele.name === alighting_point) {
-            aKm = ele.aKm;
-          }
-        });
-        let fare = 0;
-        let tKm = aKm - bKm;
-        fare = fareCal(tKm);
-        fare *= no_of_passengers;
+
+        let fare_plus_gst = fare * no_of_passengers * 1.1 + 20;
         const reservation = new Reservation({
           user_id: req.user.id,
           trip_id: req.params.id,
           boarding_point,
+          b_time,
           alighting_point,
+          a_time,
           passenger_list,
-          fare: fare,
+          fare: fare_plus_gst,
         });
         const saveReservation = await reservation.save();
         tripDetails = await Trip.findByIdAndUpdate(req.params.id, {
@@ -137,8 +98,47 @@ router.post(
 // Route 3: Get Reservation Details : Post "/api/user/reservationDetails". Sign-in Required
 router.post("/reservationDetails", fetchuser, async (req, res) => {
   try {
-    const reserve = await Reservation.find({ user_id: req.user.id });
-    res.json(reserve);
+    const reserve = await Reservation.find({ user_id: req.user.id })
+      .populate({
+        path: "trip_id",
+        populate: {
+          path: "route_id bus_id"
+        },
+      })
+      .then(function (dbTour) {
+        res.json(dbTour);
+      })
+      .catch(function (err) {
+        res.json(err);
+      });
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Route 4: Cancel Reservation: Post "/api/user/cancel". Sign-in Required
+router.post("/cancel/:id", fetchuser, async (req, res) => {
+  try {
+    let reservation = await Reservation.findById(req.params.id);
+    let trip = await Trip.findById(reservation.trip_id);
+    let booked_seats_list = trip.book_seats_no;
+    reservation.passenger_list.forEach((passenger) => {
+      if (booked_seats_list.indexOf(passenger.seat_no) !== -1) {
+        booked_seats_list.splice(
+          booked_seats_list.indexOf(passenger.seat_no),
+          1
+        );
+      }
+    });
+    let newAvailability = trip.availability + reservation.passenger_list.length;
+    trip = await Trip.findByIdAndUpdate(reservation.trip_id, {
+      $set: {
+        book_seats_no: booked_seats_list,
+        availability: newAvailability,
+      },
+    });
+    reservation = await Reservation.findByIdAndDelete(req.params.id);
+    res.json({ Success: `Your Booking with ${reservation._id} ID is Cancelled` });
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }

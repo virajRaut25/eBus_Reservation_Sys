@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function SignUp() {
+export default function SignUp(props) {
+  const { showAlert } = props;
   const host = "http://localhost:5000";
   let navigate = useNavigate();
   const [credential, setCredential] = useState({
@@ -40,22 +41,23 @@ export default function SignUp() {
       const json = await response.json();
       console.log(json);
       if (json.success) {
+        showAlert("success", "Account Successfully Created");
         localStorage.setItem("token", json.authtoken);
         navigate("/");
       } else {
         if (json.error) {
-          alert(json.error);
+          showAlert("danger", json.error);
         } else {
-          console.log(json.error[0].msg);
+          showAlert("danger", json.error[0].msg);
         }
       }
     } else {
-      alert("Passwords don't Match");
+      showAlert("danger", "Passwords don't Match");
     }
   };
   return (
-    <div className="container my-3">
-      <h2>Create an account to Book Ticket</h2>
+    <div className="container mt-5">
+      <h2 className="pt-5">Create an account to Book Ticket</h2>
       <form onSubmit={handleSubmit}>
         <div className="row g-3 mb-3">
           <div className="col-md-4">
@@ -182,7 +184,7 @@ export default function SignUp() {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-danger">
           Submit
         </button>
       </form>

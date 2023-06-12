@@ -23,9 +23,16 @@ const SearchState = (props) => {
     setSearchRes(sres);
     setSearch({ source, destination, trip_date });
   };
+
   return (
     <SearchContext.Provider
-      value={{ search, loading, setLoading, searchRes, searchBus }}
+      value={{
+        search,
+        loading,
+        setLoading,
+        searchRes,
+        searchBus,
+      }}
     >
       {props.children}
     </SearchContext.Provider>

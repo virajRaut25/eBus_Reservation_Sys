@@ -27,7 +27,7 @@ const fareCal = (tKm) => {
       fare += 45;
     } else if (40 < tKm && tKm <= 50) {
       fare += 55;
-    } else if (50 > tKm && tKm <= 60) {
+    } else if (50 < tKm && tKm <= 60) {
       fare += 60;
     }
   }

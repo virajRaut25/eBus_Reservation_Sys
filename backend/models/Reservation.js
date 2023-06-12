@@ -13,7 +13,15 @@ const ReservationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  b_time: {
+    type: String,
+    required: true,
+  },
   alighting_point: {
+    type: String,
+    required: true,
+  },
+  a_time: {
     type: String,
     required: true,
   },
@@ -29,6 +37,7 @@ const ReservationSchema = new mongoose.Schema({
   },
   fare: {
     type: Number,
+    required: true,
   },
 });
 

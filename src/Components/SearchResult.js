@@ -14,8 +14,8 @@ export default function SearchResult() {
         <Spinner />
       ) : (
         <div>
-          <div className="container mt-4">
-            {searchRes.length === 0 && "Not Available"}
+          <div className="container mt-5 text-center fs-3">
+            {searchRes.length === 0 && "Sorry... No Bus Found"}
           </div>
           {searchRes.map((sbus, index) => {
             return <BusItems key={index} bus={sbus} search={search} />;

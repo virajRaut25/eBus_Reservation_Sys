@@ -1,16 +1,19 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar(props) {
+  const { showAlert } = props;
+  let location = useLocation();
   let navigate = useNavigate();
   const handleLogout = ()=>{
     localStorage.removeItem("token");
+    showAlert('success', "Successfully LogOut!")
     navigate('/');
   }
   return (
-    <nav className="navbar navbar-expand-lg bg-light">
+    <nav className="navbar navbar-expand-lg bg-light fixed-top">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand fs-5" to="/">
           eBus
         </Link>
         <button
@@ -27,17 +30,17 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
+              <Link className={`nav-link fs-5 ${location.pathname==='/'?"active":""}`} aria-current="page" to="/">
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/manageBooking">
+              <Link className={`nav-link fs-5 ${location.pathname==='/manageBooking'?"active":""}`} hidden={!localStorage.getItem("token")?true:false} to="/manageBooking">
                 Manage Booking
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/help">
+              <Link className={`nav-link fs-5 ${location.pathname==='/help'?"active":""}`} to="/help">
                 Help
               </Link>
             </li>

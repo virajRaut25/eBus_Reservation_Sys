@@ -3,30 +3,49 @@ import ReservationContext from "./reservationContext";
 
 const ReservationState = (props) => {
   const host = "http://localhost:5000";
-  const [tripDetails, setTripDetails] = useState([]);
+  // const [tripDetails, setTripDetails] = useState([]);
   const [pass, setPass] = useState(null);
-  const [rev, setRev] = useState({});
   const [reserve, setReserve] = useState({});
+  const [bookings, setBookings] = useState([]);
+  const [receipt, setReceipt] = useState({});
+  const [tripInfo, setTripInfo] = useState({});
   // Search Bus
-  const searchTrip = async (id) => {
-    const response = await fetch(`${host}/api/user/tripDetails`, {
+  // const searchTrip = async (id) => {
+  //   const response = await fetch(`${host}/api/user/tripDetails`, {
+  //     method: "POST",
+  //     headers: {
+  //       "auth-token": localStorage.getItem("token"),
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ id: id }),
+  //   });
+  //   const tripRes = await response.json();
+  //   setTripDetails(tripRes);
+  // };
+
+  // Get Trip Info
+  const getInfo = async (source, destination, trip_id) => {
+    const response = await fetch(`${host}/api/search/info/${trip_id}`, {
       method: "POST",
       headers: {
-        "auth-token": localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: id }),
+      body: JSON.stringify({ source, destination }),
     });
-    const tripRes = await response.json();
-    setTripDetails(tripRes);
+    const info = await response.json();
+    setTripInfo(info);
+    return info;
   };
 
   // Make Reservation
   const makeReservation = async (
     id,
     boarding_point,
+    b_time,
     alighting_point,
-    passenger_list
+    a_time,
+    passenger_list,
+    fare
   ) => {
     const response = await fetch(`${host}/api/user/book/${id}`, {
       method: "POST",
@@ -34,11 +53,29 @@ const ReservationState = (props) => {
         "auth-token": localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ boarding_point, alighting_point, passenger_list }),
+      body: JSON.stringify({
+        boarding_point,
+        b_time,
+        alighting_point,
+        a_time,
+        passenger_list,
+        fare,
+      }),
     });
     const res = await response.json();
     setReserve(res);
-    console.log(reserve);
+    return res;
+  };
+
+  // Cancel Reservation(booking)
+  const cancelBooking = async (rev_id) => {
+    const response = await fetch(`${host}/api/user/cancel/${rev_id}`, {
+      method: "POST",
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+    });
   };
 
   // Get Reservation Details
@@ -50,21 +87,24 @@ const ReservationState = (props) => {
         "Content-Type": "application/json",
       },
     });
-    return response.json();
+    const book = await response.json();
+    setBookings(book);
   };
 
   return (
     <ReservationContext.Provider
       value={{
-        rev,
-        setRev,
         reserve,
         makeReservation,
         getReserve,
-        searchTrip,
-        tripDetails,
         pass,
         setPass,
+        bookings,
+        receipt,
+        setReceipt,
+        getInfo,
+        tripInfo,
+        cancelBooking,
       }}
     >
       {props.children}
